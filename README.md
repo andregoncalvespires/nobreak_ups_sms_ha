@@ -67,24 +67,6 @@ agendado, alarme sonoro ativo.
 **Botões:** iniciar teste de bateria (10s / 5min), testar até descarregar,
 parar teste.
 
-## Migrando do fluxo Node-RED
-
-1. Instale e configure esta integração primeiro, com o Node-RED ainda
-   rodando — como os dois processos vão disputar a porta serial, **pare o
-   Node-RED (ou desabilite os nós `SMS IN`/`SMS OUT` e o inject `Request
-   Data`) antes de abrir a porta pela integração**, senão um dos dois vai
-   falhar ao conectar.
-2. Confirme que os valores batem com o que o flow antigo mostrava.
-3. As entidades novas nascem com `entity_id` diferentes das criadas pelos
-   nós `ha-sensor`/`ha-binary-sensor`/`ha-button` do flow antigo (que usam os
-   UUIDs do Node-RED). Se você tem automações, dashboards ou histórico
-   presos aos `entity_id` antigos (`sensor.sms_input_voltage` etc.), o
-   caminho mais simples é renomear o `entity_id` das novas entidades para
-   igualar os antigos, em Configurações da entidade → Avançado.
-4. Depois de validar tudo, exclua ou desabilite a aba "UPS SMS" no Node-RED
-   e remova os nós `ha-entity-config` correspondentes para não deixar
-   entidades órfãs.
-
 ## Adaptando para outro modelo
 
 O protocolo (`protocol.py`) é genérico dentro da família Megatec/Voltronic:
