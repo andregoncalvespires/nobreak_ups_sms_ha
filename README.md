@@ -1,5 +1,8 @@
 # Nobreak SMS (Serial UPS) — integração customizada para Home Assistant
 
+[![Validate HACS](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/validate.yml/badge.svg)](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/validate.yml)
+[![Hassfest](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/hassfest.yml/badge.svg)](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/hassfest.yml)
+
 Substitui o fluxo Node-RED de monitoramento do nobreak SMS PRO 700VA (ligado
 via USB serial) por uma integração nativa do Home Assistant, com detecção
 automática das portas USB disponíveis na tela de configuração.
@@ -23,9 +26,18 @@ mesmo trabalho, mas:
 ## Instalação
 
 **Opção A — HACS (repositório customizado)**
-1. HACS → Integrações → menu (⋮) → Repositórios customizados.
-2. Adicione a URL deste repositório, categoria "Integration".
+
+Este repositório ainda não está na lista padrão do HACS (isso é um processo à
+parte, feito via PR para `hacs/default` — ver seção abaixo), então por
+enquanto ele precisa ser adicionado manualmente como repositório customizado:
+
+1. HACS → Integrações → menu (⋮) → "Repositórios customizados".
+2. URL: `https://github.com/andregoncalvespires/nobreak_ups_sms_ha`, categoria
+   "Integration".
 3. Instale "Nobreak SMS (Serial UPS)" e reinicie o Home Assistant.
+
+Ou use o link direto (My Home Assistant):
+`https://my.home-assistant.io/redirect/hacs_repository/?owner=andregoncalvespires&repository=nobreak_ups_sms_ha&category=integration`
 
 **Opção B — manual**
 1. Copie a pasta `custom_components/sms_nobreak` para
@@ -91,3 +103,41 @@ Uma observação: o comando `I` (consulta de nome/identificação do nobreak,
 `CMD_UPS_NAME`) existe no protocolo mas estava desabilitado no flow original
 e por isso não foi conectado a nenhuma entidade aqui — o formato de resposta
 dele não foi validado.
+
+## Status de preparação para o HACS
+
+O que já está pronto no repositório:
+
+- [x] `hacs.json` na raiz, com `name` e versão mínima do Home Assistant.
+- [x] Uma única integração em `custom_components/sms_nobreak/`.
+- [x] `manifest.json` com `domain`, `name`, `documentation`, `issue_tracker`,
+      `codeowners` e `version`.
+- [x] Ícone de marca embutido em `custom_components/sms_nobreak/brand/`
+      (`icon.png` 256×256 e `icon@2x.png` 512×512) — recurso disponível a
+      partir do Home Assistant 2026.3, que dispensa o PR para o repositório
+      [home-assistant/brands](https://github.com/home-assistant/brands) que
+      era exigido antes dessa versão.
+- [x] `README.md` com instruções de uso.
+- [x] `LICENSE` (MIT).
+- [x] Workflows do GitHub Actions: `hacs/action` (`.github/workflows/validate.yml`)
+      e `hassfest` (`.github/workflows/hassfest.yml`), rodando em todo push/PR
+      e diariamente.
+- [x] Descrição e topics configurados no repositório GitHub (usados na
+      busca/listagem do HACS).
+
+O que falta para virar um repositório "default" do HACS (listado na busca sem
+precisar adicionar como customizado — processo separado, feito via PR para
+[`hacs/default`](https://github.com/hacs/default)):
+
+- [ ] Publicar uma **release** no GitHub (não só uma tag) depois que os
+      workflows acima passarem sem erro — a HACS usa a tag da última release
+      como versão.
+- [ ] Deixar o repositório "amadurecer" um pouco de uso real (issues
+      habilitadas, sem estar arquivado, etc.) — não há um número mínimo de
+      dias documentado, mas o time do HACS revisa manualmente.
+- [ ] Abrir o PR em `hacs/default` adicionando a entrada em ordem alfabética,
+      a partir de um fork (não pode ser enviado direto de uma conta de
+      organização).
+
+Enquanto isso não acontece, o repositório já funciona perfeitamente como
+repositório customizado (opção A da instalação acima).
