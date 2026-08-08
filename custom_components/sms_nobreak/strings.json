@@ -1,0 +1,74 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Conectar ao nobreak",
+        "description": "Foram detectadas {count} porta(s) serial. Selecione a porta USB do nobreak, ou escolha \"Digitar caminho manualmente\" se ele não aparecer na lista.",
+        "data": {
+          "serial_port": "Porta serial",
+          "baudrate": "Baud rate",
+          "capacity_va": "Capacidade nominal (VA)",
+          "power_factor": "Fator de potência",
+          "scan_interval": "Intervalo de leitura (segundos)"
+        }
+      },
+      "manual_port": {
+        "title": "Informar porta manualmente",
+        "data": {
+          "serial_port": "Caminho do dispositivo (ex: /dev/ttyUSB0)",
+          "baudrate": "Baud rate",
+          "capacity_va": "Capacidade nominal (VA)",
+          "power_factor": "Fator de potência",
+          "scan_interval": "Intervalo de leitura (segundos)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Não foi possível abrir a porta serial informada.",
+      "invalid_response": "A porta abriu, mas o dispositivo não respondeu como um nobreak compatível."
+    },
+    "abort": {
+      "already_configured": "Este dispositivo já está configurado."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Ajustar parâmetros do nobreak",
+        "data": {
+          "capacity_va": "Capacidade nominal (VA)",
+          "power_factor": "Fator de potência",
+          "scan_interval": "Intervalo de leitura (segundos)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "last_input_vac": { "name": "Última tensão de entrada" },
+      "input_vac": { "name": "Tensão de entrada" },
+      "output_vac": { "name": "Tensão de saída" },
+      "output_power_percent": { "name": "Potência de saída" },
+      "output_power_watts": { "name": "Potência de saída (W)" },
+      "output_hz": { "name": "Frequência de saída" },
+      "battery_level": { "name": "Nível da bateria" },
+      "temperature_c": { "name": "Temperatura" }
+    },
+    "binary_sensor": {
+      "battery_in_use": { "name": "Operando na bateria" },
+      "battery_low": { "name": "Bateria fraca" },
+      "bypass": { "name": "Bypass" },
+      "boost": { "name": "Boost" },
+      "ups_ok": { "name": "Problema no nobreak" },
+      "test_active": { "name": "Teste em andamento" },
+      "shutdown_active": { "name": "Desligamento agendado" },
+      "beep_on": { "name": "Alarme sonoro ativo" }
+    },
+    "button": {
+      "start_test_10s": { "name": "Iniciar teste de bateria (10s)" },
+      "start_test_5m": { "name": "Iniciar teste de bateria (5min)" },
+      "start_test_until_low": { "name": "Testar bateria até descarregar" },
+      "stop_test": { "name": "Parar teste de bateria" }
+    }
+  }
+}

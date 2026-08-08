@@ -1,0 +1,114 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to the UPS",
+        "description": "{count} serial port(s) detected. Pick the UPS USB port below, or choose \"Enter path manually\" if it is not listed.",
+        "data": {
+          "serial_port": "Serial port",
+          "baudrate": "Baud rate",
+          "capacity_va": "Rated capacity (VA)",
+          "power_factor": "Power factor",
+          "scan_interval": "Poll interval (seconds)"
+        }
+      },
+      "manual_port": {
+        "title": "Enter port manually",
+        "data": {
+          "serial_port": "Device path (e.g. /dev/ttyUSB0)",
+          "baudrate": "Baud rate",
+          "capacity_va": "Rated capacity (VA)",
+          "power_factor": "Power factor",
+          "scan_interval": "Poll interval (seconds)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not open the given serial port.",
+      "invalid_response": "The port opened, but the device did not respond like a compatible UPS."
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Adjust UPS parameters",
+        "data": {
+          "capacity_va": "Rated capacity (VA)",
+          "power_factor": "Power factor",
+          "scan_interval": "Poll interval (seconds)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "last_input_vac": {
+        "name": "Last input voltage"
+      },
+      "input_vac": {
+        "name": "Input voltage"
+      },
+      "output_vac": {
+        "name": "Output voltage"
+      },
+      "output_power_percent": {
+        "name": "Output power"
+      },
+      "output_power_watts": {
+        "name": "Output power (W)"
+      },
+      "output_hz": {
+        "name": "Output frequency"
+      },
+      "battery_level": {
+        "name": "Battery level"
+      },
+      "temperature_c": {
+        "name": "Temperature"
+      }
+    },
+    "binary_sensor": {
+      "battery_in_use": {
+        "name": "On battery"
+      },
+      "battery_low": {
+        "name": "Battery low"
+      },
+      "bypass": {
+        "name": "Bypass"
+      },
+      "boost": {
+        "name": "Boost"
+      },
+      "ups_ok": {
+        "name": "UPS problem"
+      },
+      "test_active": {
+        "name": "Test in progress"
+      },
+      "shutdown_active": {
+        "name": "Shutdown scheduled"
+      },
+      "beep_on": {
+        "name": "Alarm sounding"
+      }
+    },
+    "button": {
+      "start_test_10s": {
+        "name": "Start battery test (10s)"
+      },
+      "start_test_5m": {
+        "name": "Start battery test (5min)"
+      },
+      "start_test_until_low": {
+        "name": "Test battery until low"
+      },
+      "stop_test": {
+        "name": "Stop battery test"
+      }
+    }
+  }
+}
