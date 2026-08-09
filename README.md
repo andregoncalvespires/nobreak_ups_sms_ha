@@ -3,7 +3,7 @@
 [![Validate HACS](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/validate.yml/badge.svg)](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/validate.yml)
 [![Hassfest](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/hassfest.yml/badge.svg)](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/hassfest.yml)
 
-Substitui o fluxo Node-RED de monitoramento do nobreak SMS PRO 700VA (ligado
+Integração de monitoramento do nobreak SMS PRO 700VA (ligado
 via USB serial) por uma integração nativa do Home Assistant, com detecção
 automática das portas USB disponíveis na tela de configuração.
 
