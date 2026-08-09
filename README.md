@@ -3,7 +3,7 @@
 [![Validate HACS](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/validate.yml/badge.svg)](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/validate.yml)
 [![Hassfest](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/hassfest.yml/badge.svg)](https://github.com/andregoncalvespires/nobreak_ups_sms_ha/actions/workflows/hassfest.yml)
 
-Integração de monitoramento do nobreak SMS PRO 700VA (ligado
+Integração de monitoramento do nobreak SMS PRO (ligado
 via USB serial) por uma integração nativa do Home Assistant, com detecção
 automática das portas USB disponíveis na tela de configuração.
 
@@ -67,16 +67,3 @@ agendado, alarme sonoro ativo.
 **Botões:** iniciar teste de bateria (10s / 5min), testar até descarregar,
 parar teste.
 
-## Adaptando para outro modelo
-
-O protocolo (`protocol.py`) é genérico dentro da família Megatec/Voltronic:
-byte de comando + 4 bytes de parâmetro + checksum (two's complement) + `0x0D`,
-resposta iniciando em `0x3D` e terminando em `0x0D`. Para outro nobreak que
-siga esse mesmo framing, normalmente basta ajustar em `const.py` os bytes de
-comando e, se os campos do status vierem em outra ordem/tamanho, os offsets
-em `parse_status()`.
-
-Uma observação: o comando `I` (consulta de nome/identificação do nobreak,
-`CMD_UPS_NAME`) existe no protocolo mas estava desabilitado no flow original
-e por isso não foi conectado a nenhuma entidade aqui — o formato de resposta
-dele não foi validado.
