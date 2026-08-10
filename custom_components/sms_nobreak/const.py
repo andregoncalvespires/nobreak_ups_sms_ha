@@ -29,6 +29,13 @@ CMD_STOP_TEST = 0x44  # 'D' - cancel test
 CMD_TEST_UNTIL_LOW = 0x4C  # 'L' - run on battery until low
 
 TEST_10S_PARAMS = bytes.fromhex("00100000")
-TEST_5M_PARAMS = bytes.fromhex("012c0000")
+# Duration encoding for CMD_TEST is the target minutes * 100 (hundredths of a
+# minute), packed big-endian in the first two param bytes - confirmed against
+# real device timing: raw word 300 (0x012C) reliably ran for exactly 180s
+# (3.00 min), and 16 (0x0010, the 10s-test constant) is consistent with
+# 0.16 min (~9.6s). The value below was originally 0x012C (300 = "300
+# seconds", an incorrect assumption), which produced a 3-minute test instead
+# of 5. 500 (0x01F4) = 5.00 min * 100 gives a true 5-minute test.
+TEST_5M_PARAMS = bytes.fromhex("01f40000")
 
 STATUS_FRAME_LENGTH = 18

@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import logging
+import threading
 from datetime import timedelta
 
 import serial
 
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import (
@@ -30,13 +32,20 @@ class SmsNobreakApi:
     """Thin synchronous wrapper around the serial link.
 
     All methods are blocking and must be called via
-    hass.async_add_executor_job from the event loop.
+    hass.async_add_executor_job from the event loop. The coordinator's
+    periodic status poll and button presses run on independent executor
+    threads, so every access to the underlying serial.Serial object is
+    guarded by ``_lock`` - pyserial does not serialize concurrent
+    read/write calls on its own, and two threads hitting the port at once
+    is exactly what produces pyserial's "device disconnected or multiple
+    access on port" error.
     """
 
     def __init__(self, port: str, baudrate: int) -> None:
         self._port = port
         self._baudrate = baudrate
         self._conn: serial.Serial | None = None
+        self._lock = threading.Lock()
 
     def _ensure_open(self) -> serial.Serial:
         if self._conn is None or not self._conn.is_open:
@@ -50,11 +59,36 @@ class SmsNobreakApi:
             )
         return self._conn
 
+    def _write_only(self, frame: bytes) -> None:
+        """Send a command that has no synchronous status-shaped reply.
+
+        Used for the test/stop commands: the original Node-RED flow never
+        paired these with a read either, only the status query is
+        request/response. Not blocking on a read here also shrinks the
+        window in which a concurrent status poll could collide with this
+        call.
+        """
+        with self._lock:
+            try:
+                conn = self._ensure_open()
+                conn.write(frame)
+            except serial.SerialException:
+                self.close()
+                raise
+
     def _send(self, frame: bytes) -> bytes:
-        conn = self._ensure_open()
-        conn.reset_input_buffer()
-        conn.write(frame)
-        return conn.read(STATUS_FRAME_LENGTH)
+        """Write a command and read back a status-length reply. Only used
+        for the status query, which is the one command that actually
+        replies synchronously."""
+        with self._lock:
+            try:
+                conn = self._ensure_open()
+                conn.reset_input_buffer()
+                conn.write(frame)
+                return conn.read(STATUS_FRAME_LENGTH)
+            except serial.SerialException:
+                self.close()
+                raise
 
     def query_status(self) -> UpsStatus:
         raw = self._send(build_command(CMD_STATUS))
@@ -64,16 +98,16 @@ class SmsNobreakApi:
         return status
 
     def start_test_10s(self) -> None:
-        self._send(build_command(CMD_TEST, TEST_10S_PARAMS))
+        self._write_only(build_command(CMD_TEST, TEST_10S_PARAMS))
 
     def start_test_5m(self) -> None:
-        self._send(build_command(CMD_TEST, TEST_5M_PARAMS))
+        self._write_only(build_command(CMD_TEST, TEST_5M_PARAMS))
 
     def start_test_until_low(self) -> None:
-        self._send(build_command(CMD_TEST_UNTIL_LOW))
+        self._write_only(build_command(CMD_TEST_UNTIL_LOW))
 
     def stop_test(self) -> None:
-        self._send(build_command(CMD_STOP_TEST))
+        self._write_only(build_command(CMD_STOP_TEST))
 
     def close(self) -> None:
         if self._conn is not None and self._conn.is_open:
