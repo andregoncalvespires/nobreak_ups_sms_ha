@@ -4,9 +4,12 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
+import serial
+
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -72,7 +75,12 @@ class SmsButton(ButtonEntity):
         )
 
     async def async_press(self) -> None:
-        await self.hass.async_add_executor_job(
-            self.entity_description.press_fn, self._coordinator.api
-        )
+        try:
+            await self.hass.async_add_executor_job(
+                self.entity_description.press_fn, self._coordinator.api
+            )
+        except serial.SerialException as err:
+            raise HomeAssistantError(
+                f"Falha ao enviar o comando para o nobreak (porta serial): {err}"
+            ) from err
         await self._coordinator.async_request_refresh()
