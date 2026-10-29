@@ -67,3 +67,22 @@ agendado, alarme sonoro ativo.
 **Botões:** iniciar teste de bateria (10s / 5min), testar até descarregar,
 parar teste.
 
+
+## Versões
+
+As tags e releases do GitHub são criadas automaticamente pelo workflow
+`.github/workflows/release.yml`. A versão da integração é o campo `version`
+de `custom_components/sms_nobreak/manifest.json`.
+
+Para publicar uma nova versão:
+
+1. Suba o campo `version` no `manifest.json` (por exemplo, de `0.1.1` para `0.1.2`).
+2. Faça o commit e o push (ou o merge de um PR) na branch `main`.
+3. O workflow lê a versão, e, se a release `v<versão>` ainda não existir, cria a
+   tag e a release apontando para esse commit, com notas geradas a partir dos
+   commits e PRs desde a release anterior.
+
+O workflow só roda quando o `manifest.json` muda na `main`, e é idempotente: se a
+release já existir, nada é feito. Também pode ser executado manualmente em
+Actions → Release → "Run workflow". O HACS usa a tag da release mais recente
+para oferecer a atualização aos usuários.
